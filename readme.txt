@@ -2,6 +2,14 @@
                         CYPRESS SEMICONDUCTOR CORPORATION
                                     FX3 SDK
 
+Update:
+----------------------------
+1. Add vendor command
+2. Fix error in describing SPI read command in original readme file
+3. Change the format of calling SPI erase command
+4. Add cyUSBWrap.py to test those vendor command
+
+
 USB Flash Programmer Example
 ----------------------------
 
@@ -88,7 +96,7 @@ USB Flash Programmer Example
 
    5. Read from SPI flash
       bmRequestType = 0xC0
-      bRequest      = 0xC3
+      bRequest      = 0xC5
       wValue        = 0x0000
       wIndex        = SPI flash page address (Each page is assumed to be of 256 bytes and the byte address is
                       computed by multiplying wIndex by 256)
@@ -111,11 +119,11 @@ USB Flash Programmer Example
       bRequest      = 0xC4
       wValue        = 0x0000
       wIndex        = 0x0000
-      wLength       = 0x0001
+      wLength       = 0x0002
 
       Data phase will indicate SPI flash busy status
       0x00 means SPI flash has finished write/erase operation and is ready for next command.
-      Non-zero value means that SPI flash is still busy processing previous write/erase command.
+      0x1 means that SPI flash is still busy processing previous write/erase command
 
    8. Reset device
       bmRequestType = 0x40
@@ -128,7 +136,26 @@ USB Flash Programmer Example
       session to cause FX3 to reset and load the newly flashed firmware from SPI Flash or I2C
       EEPROM.
 
+   9. Check SPI Firmware version
+      bmRequestType = 0xC0
+      bRequest      = 0xC8
+      wValue        = 0x0000
+      wIndex        = 0x0000
+      wLength       = 0x0008
+
+      Read Firmware version number stored in Cypress firmware
+
+   9. Check SPI flash Vendor ID
+      bmRequestType = 0xC0
+      bRequest      = 0xC5
+      wValue        = 0x0000
+      wIndex        = 0x0000
+      wLength       = 0x0002
+
+      Read vendor ID of SPI, should return 0xef
+
 Note:- bmRequestType, bRequest, wValue, wIndex, wLength are fields of setup packet. Refer USB 
        specification for understanding format of setup data. 
-[]
+
+
 
